@@ -1,4 +1,5 @@
-﻿using managementorderapi.Models;
+﻿using managementorderapi.Helper;
+using managementorderapi.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace managementorderapi.Data
@@ -15,7 +16,8 @@ namespace managementorderapi.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
+            //Aplicar configuracion para el seeding data a la entidad
+            modelBuilder.ApplyConfiguration(new ProductConfiguration());
             // Configuración de la relación muchos-a-muchos entre Order y Product
             modelBuilder.Entity<OrderProduct>()
                 .HasKey(op => new { op.OrderId, op.ProductId });
