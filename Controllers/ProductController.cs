@@ -1,4 +1,5 @@
-﻿using managementorderapi.Models;
+﻿using managementorderapi.Helper;
+using managementorderapi.Models;
 using managementorderapi.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
@@ -50,19 +51,44 @@ namespace managementorderapi.Controllers
         }
 
         // GET: api/Client
-        [HttpGet]
+        [HttpGet("getProducts")]
         public async Task<IActionResult> GetProducts()
         {
             try
             {
-               
+
                 var products = await _productRepository.GetAll();
+                return Ok(products); // 200 OK
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error buscando los productos: {ex.Message}"); // 500 Internal Server Error
+            }
+        }
+        [HttpGet("getProductsByFilter")]
+        public async Task<IActionResult> GetProductsByFilter([FromQuery] ProductBindProperty product)
+        {
+            try
+            {
+                var products = await _productRepository.FilterProductsAsync(product.id, product.name, product.stock, product.price, product.description);
+                if (products == null || products.Count() == 0)
+                {
+                    return NotFound($"No se encontró ningún producto con las especificaciones: " +
+                           $"ID: {product.id?.ToString() ?? "N/A"}, " +
+                           $"Nombre: {product.name ?? "N/A"}, " +
+                           $"Stock: {product.stock?.ToString() ?? "N/A"}, " +
+                           $"Precio: {product.price}, " +
+                           $"Descripción: {product.description ?? "N/A"}"); 
+                    // 404 Not Found
+                }
                 return Ok(products); // 200 OK
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Error retrieving clients: {ex.Message}"); // 500 Internal Server Error
+                return StatusCode(500, $"Error buscando los productos: {ex.Message}"); // 500 Internal Server Error
             }
         }
+
     }
 }

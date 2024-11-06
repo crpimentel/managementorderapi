@@ -1,7 +1,8 @@
 ﻿using managementorderapi.Models;
+using managementorderapi.Repositories;
 using System;
 
-namespace managementorderapi.Repositories
+namespace managementorderapi.Services
 {
     public class ProductService : IRepositoryProduct
     {
