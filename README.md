@@ -9,3 +9,4 @@ Especificaciones del proyecto
 del contexto db con las configuracion para el seeding data
 6.Patron repositorio soportado con interfaz generica para aplicar las operaciones Crud de cualquier entidad
 7.Implementar clases que representaran los parametros que algunos servicios van a recibir (BindProperty)
+8.Integracion asp .net core mvc with bootrap 5 and template

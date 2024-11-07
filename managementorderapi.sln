@@ -5,7 +5,7 @@ VisualStudioVersion = 17.11.35327.3
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "managementorderapi", "managementorderapi.csproj", "{1C55E1DA-0B8F-4D3D-A398-9838B8C73ACA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "managementorder", "..\managementorder\managementorder.csproj", "{879155D5-5EC6-40D7-BEB6-EB5EAD65B9F7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "managementorder", "..\managementorder\managementorder.csproj", "{879155D5-5EC6-40D7-BEB6-EB5EAD65B9F7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
