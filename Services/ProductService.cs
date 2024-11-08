@@ -2,6 +2,7 @@
 using managementorderapi.Models;
 using managementorderapi.Repositories;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace managementorderapi.Services
 {
@@ -56,15 +57,25 @@ namespace managementorderapi.Services
             return products;
         }
 
-        public async Task<IEnumerable<Product>> GetAll()
+       
+
+        public async Task<IEnumerable<Product>> GetAll(params Expression<Func<Product, object>>[] includes)
         {
-            var products = await _repository.GetAll();
+            // Fetch products with ProductImages included
+            var products = await _repository.GetAll(p => p.ProductImages);
             return products;
+
         }
 
         public Task<Product> GetById(int id)
         {
             throw new NotImplementedException();
+        }
+
+        public Task<Product> GetById(int id, params Expression<Func<Product, object>>[] includes)
+        {
+            // Fetch product by ID with ProductImages included
+            return _repository.GetById(id, p => p.ProductImages);
         }
 
         public Task Save()
