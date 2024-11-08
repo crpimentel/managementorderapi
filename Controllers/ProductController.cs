@@ -5,6 +5,7 @@ using managementorderapi.Repositories;
 using managementorderapi.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Net;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -102,6 +103,7 @@ namespace managementorderapi.Controllers
                 var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
                 return BadRequest(new ApiResponse<object>
                 {
+                    Code = HttpStatusCode.BadRequest.ToString(),
                     Success = false,
                     Message = "Validation failed",
                     Errors = errors
@@ -110,12 +112,13 @@ namespace managementorderapi.Controllers
             
             try
             {
-                using var transaction = await _context.Database.BeginTransactionAsync();
+                await using var transaction = await _context.Database.BeginTransactionAsync();
                 // Validate price and stock values if necessary
                 if (productDto.Price < 1 || productDto.Stock < 1)
                 {
                     return BadRequest(new ApiResponse<object>
                     {
+                        Code = HttpStatusCode.BadRequest.ToString(),
                         Success = false,
                         Message = "Precio y cantidad deben ser mayor a cero"
                     });
@@ -137,7 +140,7 @@ namespace managementorderapi.Controllers
                     {
                         if (formFile.Length > 0)
                         {
-                            using var memoryStream = new MemoryStream();
+                            await using var memoryStream = new MemoryStream();
                             await formFile.CopyToAsync(memoryStream);
 
                             var productImage = new ProductImage
@@ -157,9 +160,17 @@ namespace managementorderapi.Controllers
 
                 return Ok(new ApiResponse<object>
                 {
+                    Code = HttpStatusCode.OK.ToString(),
                     Success = true,
                     Message = "Product creado exitosamente!",
-                    Data = product
+                    Data = new
+                    {
+                        product.Id,
+                        product.Name,
+                        product.Description,
+                        product.Price,
+                        product.Stock
+                    }
                 });
             }
             catch (Exception ex)
