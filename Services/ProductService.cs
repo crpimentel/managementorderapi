@@ -1,6 +1,7 @@
-﻿using managementorderapi.Models;
+﻿using managementorderapi.Helper;
+using managementorderapi.Models;
 using managementorderapi.Repositories;
-using System;
+using Microsoft.EntityFrameworkCore;
 
 namespace managementorderapi.Services
 {
@@ -12,9 +13,12 @@ namespace managementorderapi.Services
         {
             _repository = repository;
         }
-        public Task Add(Product entity)
+        public Task Add(Product product)
         {
-            throw new NotImplementedException();
+            
+            _repository.Add(product);
+            return _repository.Save();
+
         }
 
         public Task Delete(int id)

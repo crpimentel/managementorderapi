@@ -1,7 +1,10 @@
-﻿using managementorderapi.Helper;
+﻿using managementorderapi.Data;
+using managementorderapi.Helper;
 using managementorderapi.Models;
 using managementorderapi.Repositories;
+using managementorderapi.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -12,11 +15,12 @@ namespace managementorderapi.Controllers
     public class ProductController : ControllerBase
     {
         private readonly IRepositoryProduct _productRepository;
+        private readonly AppDbContext _context;
 
-
-        public ProductController(IRepositoryProduct productRepository)
+        public ProductController(IRepositoryProduct productRepository, AppDbContext context)
         {
             _productRepository = productRepository;
+            _context = context;
         }
         // GET: api/<ProductController>
         [HttpGet]
@@ -90,5 +94,84 @@ namespace managementorderapi.Controllers
             }
         }
 
+        [HttpPost("create")]
+        public async Task<IActionResult> Create([FromForm] ProductCreateDto productDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+                return BadRequest(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "Validation failed",
+                    Errors = errors
+                });
+            }
+            
+            try
+            {
+                using var transaction = await _context.Database.BeginTransactionAsync();
+                // Validate price and stock values if necessary
+                if (productDto.Price < 1 || productDto.Stock < 1)
+                {
+                    return BadRequest(new ApiResponse<object>
+                    {
+                        Success = false,
+                        Message = "Precio y cantidad deben ser mayor a cero"
+                    });
+                }
+                // Create and save the Product entity
+                var product = new Product
+                {
+                    Name = productDto.Name,
+                    Description = productDto.Description,
+                    Price = productDto.Price,
+                    Stock = productDto.Stock,
+                };
+                _context.Products.Add(product);
+                await _context.SaveChangesAsync();
+
+                if (productDto.Images != null && productDto.Images.Any())
+                {
+                    foreach (var formFile in productDto.Images)
+                    {
+                        if (formFile.Length > 0)
+                        {
+                            using var memoryStream = new MemoryStream();
+                            await formFile.CopyToAsync(memoryStream);
+
+                            var productImage = new ProductImage
+                            {
+                                ImageData = memoryStream.ToArray(),
+                                ImageType = formFile.ContentType,
+                                ProductId = product.Id 
+                            };
+
+                            _context.ProductImages.Add(productImage);
+                        }
+                    }
+
+                    await _context.SaveChangesAsync(); 
+                }
+                await transaction.CommitAsync();
+
+                return Ok(new ApiResponse<object>
+                {
+                    Success = true,
+                    Message = "Product creado exitosamente!",
+                    Data = product
+                });
+            }
+            catch (Exception ex)
+            {
+                // Respond with a 500 Internal Server Error and a meaningful message
+                return StatusCode(500, new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "An internal server error occurred. Please try again later.",
+                    Errors = new List<string> { ex.Message }
+                });
+            }
+        }
     }
 }
