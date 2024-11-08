@@ -8,9 +8,8 @@
         public int Stock { get; set; }
         public string Description { get; set; }
 
-        // Lista de imágenes (urls por ejemplo)
-        public List<string> Images { get; set; } = new List<string>();
-
+        // Navigation property for related images
+        public ICollection<ProductImage> ProductImages { get; set; }
         // Relación muchos-a-muchos con Order
         public List<OrderProduct> OrderProducts { get; set; } = new List<OrderProduct>();
     }
