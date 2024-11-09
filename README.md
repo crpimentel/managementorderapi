@@ -12,3 +12,4 @@ del contexto db con las configuracion para el seeding data
 8.Integracion asp .net core mvc with bootrap 5 and template
 9.Integracion en la misma solucion el proyecto  asp.net core mvc ui y proyecto asp.net core web api
 10. Aplicacion de inyeccion de dependencia en ambos proyectos
+11.Implementacion de DataTables server-side processing feature para DataTable row details
