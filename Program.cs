@@ -24,8 +24,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IRepositoryProduct, ProductService>();
+builder.Services.AddScoped<IClientService, ClientService>();
 builder.Services.AddScoped(typeof(IRepository<Product>), typeof(Repository<Product>));
-
+builder.Services.AddScoped(typeof(IRepository<Client>), typeof(Repository<Client>));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
