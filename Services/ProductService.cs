@@ -8,6 +8,7 @@ namespace managementorderapi.Services
 {
     public class ProductService : IRepositoryProduct
     {
+
         private readonly IRepository<Product> _repository;
 
         public ProductService(IRepository<Product> repository)

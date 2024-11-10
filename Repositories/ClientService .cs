@@ -7,6 +7,7 @@ namespace managementorderapi.Repositories
     public class ClientService : IClientService
     {
         private readonly IRepository<Client> _clientRepository;
+        // This no a good practice have context of db in repository i make to include property 
         private readonly AppDbContext _context;
 
         public ClientService(IRepository<Client> clientRepository, AppDbContext context)
@@ -18,6 +19,7 @@ namespace managementorderapi.Repositories
         {
             try
             {
+                
                 return await _context.Clients
                 .Include(client => client.Orders)
                     .ThenInclude(order => order.OrderProducts)

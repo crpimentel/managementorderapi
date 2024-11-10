@@ -13,3 +13,5 @@ del contexto db con las configuracion para el seeding data
 9.Integracion en la misma solucion el proyecto  asp.net core mvc ui y proyecto asp.net core web api
 10. Aplicacion de inyeccion de dependencia en ambos proyectos
 11.Implementacion de DataTables server-side processing feature para DataTable row details
+11.Implementacion de AutoMapper server-side processing feature para DataTable row details
+12.Puse el contexto de db en el service de cliente no es una buena practica pero debido al tiempo lo hice de esa forma
