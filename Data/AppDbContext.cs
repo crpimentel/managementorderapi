@@ -15,6 +15,9 @@ namespace managementorderapi.Data
 
         public DbSet<ProductImage> ProductImages { get; set; }
 
+        // New DbSets for OrderStatus and Supplier
+        public DbSet<OrderStatu> OrderStatuses { get; set; }
+        public DbSet<Supplier> Suppliers { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -39,6 +42,18 @@ namespace managementorderapi.Data
                 .HasOne(o => o.Client)
                 .WithMany(c => c.Orders)
                 .HasForeignKey(o => o.ClientId);
+
+            // Configure Order-OrderStatus relationship (one-to-many)
+            modelBuilder.Entity<Order>()
+                .HasOne(o => o.OrderStatus)
+                .WithMany(os => os.Orders)
+                .HasForeignKey(o => o.OrderStatusId);
+
+            // Configure Order-Supplier relationship (one-to-many)
+            modelBuilder.Entity<Order>()
+                .HasOne(o => o.Supplier)
+                .WithMany(s => s.Orders)
+                .HasForeignKey(o => o.SupplierId);
         }
     }
 }

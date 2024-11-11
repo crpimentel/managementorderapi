@@ -1,8 +1,9 @@
 ﻿using managementorderapi.Data;
 using managementorderapi.Models;
+using managementorderapi.Repositories;
 using Microsoft.EntityFrameworkCore;
 
-namespace managementorderapi.Repositories
+namespace managementorderapi.Services
 {
     public class ClientService : IClientService
     {
@@ -21,10 +22,14 @@ namespace managementorderapi.Repositories
             {
                 
                 return await _context.Clients
-                .Include(client => client.Orders)
-                    .ThenInclude(order => order.OrderProducts)
-                    .ThenInclude(orderProduct => orderProduct.Product)
-                .ToListAsync();
+                     .Include(client => client.Orders)
+                         .ThenInclude(order => order.OrderProducts)
+                             .ThenInclude(orderProduct => orderProduct.Product)
+                     .Include(client => client.Orders)
+                         .ThenInclude(order => order.OrderStatus)
+                     .Include(client => client.Orders)  // Fixing the navigation context
+                         .ThenInclude(order => order.Supplier)  // Including the Supplier for each Order
+                     .ToListAsync();
             }
             catch (Exception ex)
             {

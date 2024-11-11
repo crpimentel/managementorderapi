@@ -52,6 +52,7 @@ namespace managementorderapi.Controllers
         {
             try
             {
+                
                 var clients = await _clientService.getAllClientsWithOrdersAndProducts();
                 if (!clients.Any())
                 {
