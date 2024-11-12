@@ -71,5 +71,22 @@ namespace managementorderapi.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, new { error = "An unexpected error occurred." });
             }
         }
+
+        // GET: api/Client
+        [HttpGet("getClients")]
+        public async Task<IActionResult> GetClients()
+        {
+            try
+            {
+
+                var clients = await _clientService.GetAll();
+                return Ok(clients); 
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error buscando los clientes: {ex.Message}"); 
+            }
+        }
     }
 }

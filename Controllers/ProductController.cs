@@ -68,7 +68,7 @@ namespace managementorderapi.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Error buscando los productos: {ex.Message}"); // 500 Internal Server Error
+                return StatusCode(500, $"Error buscando los clientes: {ex.Message}"); // 500 Internal Server Error
             }
         }
         [HttpGet("getProductsByFilter")]

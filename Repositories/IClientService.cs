@@ -2,7 +2,7 @@
 
 namespace managementorderapi.Repositories
 {
-    public interface IClientService
+    public interface IClientService:IRepository<Client>
     {
         Task<IEnumerable<Client>> getAllClientsWithOrdersAndProducts();
     }

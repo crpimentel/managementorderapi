@@ -2,6 +2,7 @@
 using managementorderapi.Models;
 using managementorderapi.Repositories;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace managementorderapi.Services
 {
@@ -14,6 +15,7 @@ namespace managementorderapi.Services
         public ClientService(IRepository<Client> clientRepository, AppDbContext context)
         {
             _context = context;
+            _clientRepository = clientRepository;
         }
 
         public async Task<IEnumerable<Client>> getAllClientsWithOrdersAndProducts()
@@ -37,6 +39,39 @@ namespace managementorderapi.Services
                 // Example: _logger.LogError(ex, "Error fetching clients with orders and products");
                 throw new ApplicationException("A ocurrido un error buscando las ordenes de un cliente.");
             }
+        }
+
+
+
+        public async Task<IEnumerable<Client>> GetAll(params Expression<Func<Client, object>>[] includes)
+        {
+            var clients = await _clientRepository.GetAll();
+            return clients;
+        }
+
+        public Task<Client> GetById(int id, params Expression<Func<Client, object>>[] includes)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task Add(Client entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task Update(Client entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task Delete(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task Save()
+        {
+            throw new NotImplementedException();
         }
     }
 }
