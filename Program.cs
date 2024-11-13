@@ -25,8 +25,10 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IRepositoryProduct, ProductService>();
 builder.Services.AddScoped<IClientService, ClientService>();
+builder.Services.AddScoped<ISupplierService, SupplierService>();
 builder.Services.AddScoped(typeof(IRepository<Product>), typeof(Repository<Product>));
 builder.Services.AddScoped(typeof(IRepository<Client>), typeof(Repository<Client>));
+builder.Services.AddScoped(typeof(IRepository<Supplier>), typeof(Repository<Supplier>));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

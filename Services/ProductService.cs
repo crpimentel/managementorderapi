@@ -62,10 +62,15 @@ namespace managementorderapi.Services
 
         public async Task<IEnumerable<Product>> GetAll(params Expression<Func<Product, object>>[] includes)
         {
-            // Fetch products with ProductImages included
+            
             var products = await _repository.GetAll(p => p.ProductImages);
             return products;
 
+        }
+
+        public async Task<IEnumerable<Product>> GetAllWithoutImages()
+        {
+            return await _repository.GetAll();
         }
 
         public Task<Product> GetById(int id)

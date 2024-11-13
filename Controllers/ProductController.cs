@@ -55,7 +55,7 @@ namespace managementorderapi.Controllers
         {
         }
 
-        // GET: api/Client
+        // GET: api/<ProductController>
         [HttpGet("getProducts")]
         public async Task<IActionResult> GetProducts()
         {
@@ -68,7 +68,7 @@ namespace managementorderapi.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Error buscando los clientes: {ex.Message}"); // 500 Internal Server Error
+                return StatusCode(500, $"Error buscando los productos: {ex.Message}"); // 500 Internal Server Error
             }
         }
         [HttpGet("getProductsByFilter")]
@@ -113,7 +113,6 @@ namespace managementorderapi.Controllers
             try
             {
                 await using var transaction = await _context.Database.BeginTransactionAsync();
-                // Validate price and stock values if necessary
                 if (productDto.Price < 1 || productDto.Stock < 1)
                 {
                     return BadRequest(new ApiResponse<object>
@@ -123,7 +122,6 @@ namespace managementorderapi.Controllers
                         Message = "Precio y cantidad deben ser mayor a cero"
                     });
                 }
-                // Create and save the Product entity
                 var product = new Product
                 {
                     Name = productDto.Name,
@@ -175,13 +173,27 @@ namespace managementorderapi.Controllers
             }
             catch (Exception ex)
             {
-                // Respond with a 500 Internal Server Error and a meaningful message
                 return StatusCode(500, new ApiResponse<object>
                 {
                     Success = false,
-                    Message = "An internal server error occurred. Please try again later.",
+                    Message = "Ha ocurrido un error interno. Por favor prueba luego.",
                     Errors = new List<string> { ex.Message }
                 });
+            }
+        }
+
+        // GET: api/<ProductController>
+        [HttpGet("getList")]
+        public async Task<IActionResult> GetList()
+        {
+            try
+            {
+                var products = await _productRepository.GetAllWithoutImages();
+                return Ok(products); 
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error buscando los Productos: {ex.Message}"); 
             }
         }
     }
